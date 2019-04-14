@@ -10,7 +10,7 @@ use Log::ger;
 
 use Digest::SHA;
 use File::Util::Tempdir;
-use JSON::MaybeXS;
+use Storable qw(store_fd fd_retrieve);
 
 use parent 'HTTP::Tiny';
 
@@ -40,14 +40,14 @@ sub request {
         return $res unless $res->{status} =~ /\A[23]/; # HTTP::Tiny only regards 2xx as success
         log_trace "Saving response to cache ...";
         open my $fh, ">", $cachepath or die "Can't create cache file '$cachepath' for '$url': $!";
-        print $fh JSON::MaybeXS::encode_json($res);
+        store_fd $res, $fh;
         close $fh;
         return $res;
     } else {
         log_trace "Retrieving response from cache ...";
         open my $fh, "<", $cachepath or die "Can't read cache file '$cachepath' for '$url': $!";
         local $/;
-        my $res = JSON::MaybeXS::decode_json(scalar <$fh>);
+        my $res = fd_retrieve $fh;
         close $fh;
         return $res;
     }

@@ -1,8 +1,8 @@
-0.002   2019-04-14 (PERLANCAR)
+0.002   2019-04-14  Released-By: PERLANCAR
 
 	- Replace JSON::XS with Storable.
 
 
-0.001    2018-10-07 (PERLANCAR)
+0.001    2018-10-07  Released-By: PERLANCAR
 
          - First release.
